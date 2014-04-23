@@ -1,0 +1,14 @@
+{
+    "name": "opensourceportfolio.brackets-navigation-history",
+    "title": "Brackets navigation history",
+    "description": "Remember last 100 cursor locations",
+    "homepage": "https://github.com/opensourceportfolio",
+    "version": "0.1.0",
+    "author": "Leon Tager leon.tager@outlook.com (http://opensourceportfolio.com)",
+    "license": "MIT",
+    "engines": {
+        "brackets": ">=0.38.0"
+    },
+    "categories": "editing",
+    "keywords": ["navigation", "mouse", "cursor", "position"]
+}
