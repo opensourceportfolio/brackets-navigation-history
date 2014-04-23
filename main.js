@@ -6,6 +6,7 @@ define(function (require, exports, module) {
 
     //Modules to load
     var AppInit = brackets.getModule("utils/AppInit"),
+        DocumentManager = brackets.getModule("document/DocumentManager"),
         CommandManager = brackets.getModule("command/CommandManager"),
         KeyBindingManager = brackets.getModule("command/KeyBindingManager"),
         EditorManager = brackets.getModule("editor/EditorManager"),
@@ -16,42 +17,51 @@ define(function (require, exports, module) {
 
     var positionStack = require("positionStack"),
         lastPosition,
-        isCursorActivity = true;
+        isCursorActivity = true,
+        currentEditor;
 
     function navigate(direction) {
         return function () {
-            var editor = EditorManager.getActiveEditor(),
-                name = editor.document.file.name,
-                position = positionStack[direction](name);
+            var value,
+                document;
 
-            if (position) {
+            do {
+                value = positionStack[direction]();
+                if (value){
+                    document = DocumentManager.getOpenDocumentForPath(value.fullPath);
+                }
+            } while (value && !document);
+
+            if (value && document) {
                 isCursorActivity = false;
-                editor._codeMirror.setCursor(position);
+                DocumentManager.setCurrentDocument(document);
+                EditorManager.getCurrentFullEditor()._codeMirror.setCursor(value.position);
                 isCursorActivity = true;
             }
         };
     }
 
     function cursorActivity() {
-        var editor = EditorManager.getActiveEditor(),
-            name = editor.document.file.name,
-            position = editor._codeMirror.getCursor(true);
+        var position = currentEditor._codeMirror.getCursor(true);
 
         if (isCursorActivity) {
             if (!lastPosition || Math.abs(lastPosition.line - position.line) > 1) {
-                positionStack.push(position, name);
+                positionStack.push({
+                    'position': position,
+                    'fullPath': currentEditor.document.file.fullPath
+                });
                 console.log("new position");
             }
             lastPosition = position;
         }
     }
 
-    function setEditorListener(editor, isEnable) {
-        if (isEnable) {
-            EditorManager.getActiveEditor()._codeMirror.on('cursorActivity', cursorActivity);
-        } else {
-            editor._codeMirror.off('cursorActivity');
+    function setEditorListener(editor) {
+        if (currentEditor) {
+            currentEditor._codeMirror.off('cursorActivity');
         }
+        currentEditor = EditorManager.getCurrentFullEditor();
+        currentEditor._codeMirror.on('cursorActivity', cursorActivity);
     }
 
     AppInit.appReady(function () {
@@ -61,11 +71,10 @@ define(function (require, exports, module) {
         KeyBindingManager.addBinding(NAVIGATE_FORWARD, "Ctrl-Shift-Right", brackets.platform);
         KeyBindingManager.addBinding(NAVIGATE_BACK, "Ctrl-Shift-Left", brackets.platform);
 
-        setEditorListener(EditorManager.getActiveEditor(), true);
+        setEditorListener(EditorManager.getCurrentFullEditor());
 
-        $(EditorManager).on('activeEditorChange', function (e, current, previous) {
-            setEditorListener(previous, false);
-            setEditorListener(current, true);
+        $(EditorManager).on('activeEditorChange', function (e, current) {
+            setEditorListener(current);
         });
     });
 });

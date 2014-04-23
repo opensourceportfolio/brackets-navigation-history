@@ -1,23 +1,11 @@
 /* globals define */
 define(function () {
     "use strict";
-    var stacks = {},
+    var stack = [],
         currentIndex = -1;
 
-    function getOrCreateStack(fileName) {
-        var stack = stacks[fileName];
-
-        if (!stack) {
-            stacks[fileName] = stack = [];
-        }
-        
-        return stack;
-    }
-
     return {
-        "forward": function (fileName) {
-            var stack = getOrCreateStack(fileName);
-
+        "forward": function () {
             if (currentIndex < stack.length - 1) {
                 currentIndex++;
                 return stack[currentIndex];
@@ -25,9 +13,7 @@ define(function () {
 
             return null;
         },
-        "back": function (fileName) {
-            var stack = getOrCreateStack(fileName);
-
+        "back": function () {
             if (currentIndex > 0) {
                 currentIndex--;
                 return stack[currentIndex];
@@ -35,9 +21,7 @@ define(function () {
 
             return null;
         },
-        "push": function (item, fileName) {
-            var stack = getOrCreateStack(fileName);
-
+        "push": function (item) {
             if (currentIndex === stack.length - 1) {
                 if (currentIndex === 100) {
                     stack.shift();
