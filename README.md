@@ -1,6 +1,7 @@
-Brackets cut line
+brackets-navigation-history
 ===========================================
 
-This extension adds the ability to ctrl/cmd-X or ctrl/cmd-C
-and empty selection. Thus; cutting/copying the whole line.
-This is similar behaviour to Visual Studio.
+This extension adds the ability to ctrl-shift-right and
+ctrl-shift-left to navigate back and forward in your 
+source code. It remember the last 100 points which were
+visited in each document.
