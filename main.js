@@ -60,8 +60,12 @@ define(function (require, exports, module) {
         if (currentEditor) {
             currentEditor._codeMirror.off('cursorActivity');
         }
-        currentEditor = EditorManager.getCurrentFullEditor();
-        currentEditor._codeMirror.on('cursorActivity', cursorActivity);
+        
+		currentEditor = EditorManager.getCurrentFullEditor();
+		
+		if (currentEditor){
+			currentEditor._codeMirror.on('cursorActivity', cursorActivity);
+		}
     }
 
     AppInit.appReady(function () {
@@ -73,8 +77,8 @@ define(function (require, exports, module) {
 
         setEditorListener(EditorManager.getCurrentFullEditor());
 
-        $(EditorManager).on('activeEditorChange', function (e, current) {
-            setEditorListener(current);
+        $(EditorManager).on('activeEditorChange', function () {
+            setEditorListener();
         });
     });
 });
