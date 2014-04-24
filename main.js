@@ -1,4 +1,4 @@
-/* global define, $, jQuery, brackets, window, console */
+/* global define, $, jQuery, brackets*/
 /* jshint esnext:true */
 
 define(function (require, exports, module) {
@@ -50,7 +50,6 @@ define(function (require, exports, module) {
                     'position': position,
                     'fullPath': currentEditor.document.file.fullPath
                 });
-                console.log("new position");
             }
             lastPosition = position;
         }
