@@ -71,8 +71,8 @@ define(function (require, exports, module) {
         CommandManager.register("Navigate forward", NAVIGATE_FORWARD, navigate("forward"));
         CommandManager.register("Navigate back", NAVIGATE_BACK, navigate("back"));
 
-        KeyBindingManager.addBinding(NAVIGATE_FORWARD, "Ctrl-Shift-Right", brackets.platform);
-        KeyBindingManager.addBinding(NAVIGATE_BACK, "Ctrl-Shift-Left", brackets.platform);
+        KeyBindingManager.addBinding(NAVIGATE_FORWARD, "Ctrl-Alt-Right", brackets.platform);
+        KeyBindingManager.addBinding(NAVIGATE_BACK, "Ctrl-Alt-Left", brackets.platform);
 
         setEditorListener(EditorManager.getCurrentFullEditor());
 
