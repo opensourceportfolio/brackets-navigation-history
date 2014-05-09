@@ -35,7 +35,12 @@ define(function (require, exports, module) {
             if (value && document) {
                 isCursorActivity = false;
                 DocumentManager.setCurrentDocument(document);
-                EditorManager.getCurrentFullEditor()._codeMirror.setCursor(value.position);
+               
+                  var currentEditor = EditorManager.getCurrentFullEditor();
+		          currentEditor.setCursorPos(value.position.line, value.position.ch, true);
+		          currentEditor.focus();
+               
+                //EditorManager.getCurrentFullEditor()._codeMirror.setCursor(value.position);
                 isCursorActivity = true;
             }
         };
