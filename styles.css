@@ -1,0 +1,23 @@
+
+#navigation-back-icon {
+    font-size:1.2em;
+    color:rgb(173,173,173);
+    text-decoration: none;
+}
+#navigation-back-icon.enabled {
+    color:rgb(100,159,242);
+}
+#navigation-back-icon:before {
+	content: "\25c4";
+}
+#navigation-forward-icon {
+    font-size:1.2em;
+    color:rgb(173,173,173);
+    text-decoration: none;
+}
+#navigation-forward-icon.enabled {
+    color:rgb(100,159,242);
+}
+#navigation-forward-icon:before {
+	content: "\25ba";
+}
