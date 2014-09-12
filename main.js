@@ -10,6 +10,7 @@ define(function (require, exports, module) {
         CommandManager = brackets.getModule("command/CommandManager"),
         KeyBindingManager = brackets.getModule("command/KeyBindingManager"),
         EditorManager = brackets.getModule("editor/EditorManager"),
+		ExtensionUtils  = brackets.getModule("utils/ExtensionUtils"),
         NodeConnection = brackets.getModule("utils/NodeConnection");
 
     var NAVIGATE_FORWARD = "opensourceportfolio.navigation.forwards",
@@ -20,6 +21,8 @@ define(function (require, exports, module) {
         isCursorActivity = true,
         currentEditor;
 
+   	ExtensionUtils.loadStyleSheet(module, "styles.css");
+   
     function navigate(direction) {
         return function () {
             var value,
@@ -35,7 +38,12 @@ define(function (require, exports, module) {
             if (value && document) {
                 isCursorActivity = false;
                 DocumentManager.setCurrentDocument(document);
-                EditorManager.getCurrentFullEditor()._codeMirror.setCursor(value.position);
+               
+                  var currentEditor = EditorManager.getCurrentFullEditor();
+		          currentEditor.setCursorPos(value.position.line, value.position.ch, true);
+		          currentEditor.focus();
+               
+                //EditorManager.getCurrentFullEditor()._codeMirror.setCursor(value.position);
                 isCursorActivity = true;
             }
         };
@@ -67,7 +75,21 @@ define(function (require, exports, module) {
 		}
     }
 
-    AppInit.appReady(function () {
+       $(document.createElement("a"))
+        .attr("id", "navigation-back-icon")
+        .attr("href", "#")
+        .attr("title", "Navigate back")
+        .on("click", navigate("back"))
+        .appendTo($("#main-toolbar .buttons"));
+
+       $(document.createElement("a"))
+        .attr("id", "navigation-forward-icon")
+        .attr("href", "#")
+        .attr("title", "Navigate forward")
+        .on("click", navigate("forward"))
+        .appendTo($("#main-toolbar .buttons"));
+
+   AppInit.appReady(function () {
         CommandManager.register("Navigate forward", NAVIGATE_FORWARD, navigate("forward"));
         CommandManager.register("Navigate back", NAVIGATE_BACK, navigate("back"));
 
@@ -79,5 +101,6 @@ define(function (require, exports, module) {
         $(EditorManager).on('activeEditorChange', function () {
             setEditorListener();
         });
+       
     });
 });
